@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Shop Credit Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Credit Manager</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="{{ url_for('dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="{{ url_for('customers') }}"><i class="fas fa-users"></i> Customers</a></li>
+                <li><a href="{{ url_for('credits') }}"><i class="fas fa-credit-card"></i> Credits</a></li>
+                <li><a href="{{ url_for('reports') }}" class="active"><i class="fas fa-chart-bar"></i> Reports</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1>Reports & Analytics</h1>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="dashboard-cards">
+                <div class="card">
+                    <h3>Total Active Credits</h3>
+                    <p>{{ status_distribution.get('active', 0) }}</p>
+                </div>
+                <div class="card">
+                    <h3>Total Paid Credits</h3>
+                    <p>{{ status_distribution.get('paid', 0) }}</p>
+                </div>
+                <div class="card">
+                    <h3>Total Monthly Transactions</h3>
+                    <p>{{ monthly_stats|sum(attribute='total_transactions') }}</p>
+                </div>
+            </div>
+
+            <!-- Monthly Statistics -->
+            <div class="card" style="margin-bottom: 20px;">
+                <h3>Monthly Statistics</h3>
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Total Amount</th>
+                                <th>Transactions</th>
+                                <th>Active Credits</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in monthly_stats %}
+                            <tr>
+                                <td>{{ stat.month }}</td>
+                                <td>₹{{ "{:,.2f}".format(stat.total_amount) }}</td>
+                                <td>{{ stat.total_transactions }}</td>
+                                <td>{{ stat.active_credits }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Status Distribution -->
+            <div class="card">
+                <h3>Credit Status Distribution</h3>
+                <div class="status-distribution">
+                    {% for status, count in status_distribution.items() %}
+                    <div class="status-item">
+                        <span class="status-label">{{ status|title }}</span>
+                        <div class="status-bar">
+                            <div class="status-fill" style="width: {{ (count / monthly_stats|sum(attribute='total_transactions') * 100)|round }}%"></div>
+                        </div>
+                        <span class="status-count">{{ count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Shop Credit Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Credit Manager</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="{{ url_for('dashboard') }}" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="{{ url_for('customers') }}"><i class="fas fa-users"></i> Customers</a></li>
+                <li><a href="{{ url_for('credits') }}"><i class="fas fa-credit-card"></i> Credits</a></li>
+                <li><a href="{{ url_for('reports') }}"><i class="fas fa-chart-bar"></i> Reports</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1>Dashboard Overview</h1>
+            </div>
+
+            <!-- Dashboard Cards -->
+            <div class="dashboard-cards">
+                <div class="card">
+                    <h3>Total Credit</h3>
+                    <p>₹{{ "{:,.2f}".format(total_credit) }}</p>
+                </div>
+                <div class="card">
+                    <h3>Active Credits</h3>
+                    <p>{{ active_credits }}</p>
+                </div>
+                <div class="card">
+                    <h3>Total Customers</h3>
+                    <p>{{ total_customers }}</p>
+                </div>
+            </div>
+
+            <!-- Credit Data Table -->
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Credit Amount</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in credit_data %}
+                        <tr>
+                            <td>{{ record.customer_name }}</td>
+                            <td>₹{{ "{:,.2f}".format(record.credit_amount) }}</td>
+                            <td>{{ record.date }}</td>
+                            <td>{{ record.status }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
